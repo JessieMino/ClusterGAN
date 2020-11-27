@@ -376,4 +376,3 @@ if __name__ == '__main__':
             wgan.load(pre_trained=False, timestamp = timestamp)
 
         wgan.recon_enc(timestamp, val=False)
-

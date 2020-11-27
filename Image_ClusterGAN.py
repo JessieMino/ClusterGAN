@@ -49,17 +49,40 @@ class clusGAN(object):
         self.z_enc_gen, self.z_enc_label, self.z_enc_logits = self.enc_net(self.x_, reuse=False)
         self.z_infer_gen, self.z_infer_label, self.z_infer_logits = self.enc_net(self.x)
 
+        self._v_k = 0.
+        self._fixed_k = 0.
+        self._v_ca_g, self._v_ca_r = [0.] * 2
+        self._lambda_ca = 1.
+        self._k_t = tf.placeholder(dtype=tf.float32)
 
-        self.d = self.d_net(self.x, reuse=False)
-        self.d_ = self.d_net(self.x_)
+        real_feature, real_logits = self.d_net(self.x, reuse=False)
+        fake_feature, fake_logits = self.d_net(self.x_)
+        real_feature_1, real_logits_1 = self.d_net(self.x, reuse=False)
+        fake_feature_1, fake_logits_1 = self.d_net(self.x_)
 
+        fake_logits = tf.reshape(fake_logits, [-1])
+        fake_logits_1 = tf.reshape(fake_logits_1, [-1])
+        real_logits = tf.reshape(real_logits, [-1])
+        real_logits_1 = tf.reshape(real_logits_1, [-1])
 
-        self.g_loss = tf.reduce_mean(self.d_) + \
+        c_r = 0.1 * tf.reduce_mean(tf.square(real_feature - real_feature_1), axis=1)
+        c_r += tf.square(real_logits - real_logits_1)
+        c_f = 0.1 * tf.reduce_mean(tf.square(fake_feature - fake_feature_1), axis=1)
+        c_f += tf.square(fake_logits - fake_logits_1)
+
+        self._loss_ca_d = tf.reduce_mean(c_r)
+        self._loss_ca_r = self._loss_ca_d
+        self._loss_ca_d -= (self._fixed_k + self._k_t) * tf.reduce_mean(c_f)
+        self._loss_ca_g = tf.reduce_mean(c_f)
+
+        self.g_loss = -tf.reduce_mean(fake_logits) + \
                       self.beta_cycle_gen * tf.reduce_mean(tf.square(self.z_gen - self.z_enc_gen)) +\
                       self.beta_cycle_label * tf.reduce_mean(
-                          tf.nn.softmax_cross_entropy_with_logits(logits=self.z_enc_logits,labels=self.z_hot))
+                          tf.nn.softmax_cross_entropy_with_logits(logits=self.z_enc_logits,labels=self.z_hot))\
+                      + self._lambda_ca * self._loss_ca_g
 
-        self.d_loss = tf.reduce_mean(self.d) - tf.reduce_mean(self.d_)
+        self.d_loss = tf.reduce_mean(fake_logits) - tf.reduce_mean(real_logits) +\
+                      self._lambda_ca * self._loss_ca_d
 
         epsilon = tf.random_uniform([], 0.0, 1.0)
         x_hat = epsilon * self.x + (1 - epsilon) * self.x_
@@ -87,7 +110,7 @@ class clusGAN(object):
         run_config.gpu_options.allow_growth = True
         self.sess = tf.Session(config=run_config)
 
-    def train(self, num_batches=500000):
+    def train(self, num_batches=500000, feed_dict=None):
 
         now = datetime.datetime.now(dateutil.tz.tzlocal())
         timestamp = now.strftime('%Y_%m_%d_%H_%M_%S')
@@ -109,13 +132,17 @@ class clusGAN(object):
         for t in range(0, num_batches):
             d_iters = 5
 
+            """train D"""
             for _ in range(0, d_iters):
                 bx = self.x_sampler.train(batch_size)
                 bz = self.z_sampler(batch_size, self.z_dim, self.sampler, self.num_classes, self.n_cat)
-                self.sess.run(self.d_adam, feed_dict={self.x: bx, self.z: bz})
+                self._v_ca_r, _ = self.sess.run([self._loss_ca_r, self.d_adam],
+                                                feed_dict={self.x: bx, self.z: bz, self._k_t: self._v_k})
 
+            """train G"""
             bz = self.z_sampler(batch_size, self.z_dim, self.sampler, self.num_classes, self.n_cat)
-            self.sess.run(self.g_adam, feed_dict={self.z: bz})
+            self._v_ca_g, _ = self.sess.run([self._loss_ca_g, self.g_adam], feed_dict={self.z: bz})
+            self._v_k = np.clip(self._v_k + 0.001 * (self._v_ca_r - self._v_ca_g), 0., 1.)
 
             if (t+1) % 100 == 0:
                 bx = self.x_sampler.train(batch_size)
@@ -123,13 +150,13 @@ class clusGAN(object):
       
 
                 d_loss = self.sess.run(
-                    self.d_loss, feed_dict={self.x: bx, self.z: bz}
+                    self.d_loss, feed_dict={self.x: bx, self.z: bz, self._k_t: self._v_k}
                 )
                 g_loss = self.sess.run(
                     self.g_loss, feed_dict={self.z: bz}
                 )
-                print('Iter [%8d] Time [%5.4f] d_loss [%.4f] g_loss [%.4f]' %
-                      (t+1, time.time() - start_time, d_loss, g_loss))
+                print('Iter [%8d] Time [%5.4f] d_loss [%.4f] g_loss [%.4f] k_t [%.6f]' %
+                      (t+1, time.time() - start_time, d_loss, g_loss, self._v_k))
 
 
             if (t+1) % 5000 == 0:
@@ -250,6 +277,10 @@ class clusGAN(object):
         km = KMeans(n_clusters=max(self.num_classes, len(np.unique(labels_true))), random_state=0).fit(latent_rep)
         labels_pred = km.labels_
 
+        splits = 10
+        purity, ari, nmi = [], [], []
+        for i in range(splits):
+
         purity = metric.compute_purity(labels_pred, labels_true)
         ari = adjusted_rand_score(labels_true, labels_pred)
         nmi = normalized_mutual_info_score(labels_true, labels_pred)
@@ -320,6 +351,5 @@ if __name__ == '__main__':
             cl_gan.load(pre_trained=False, timestamp = timestamp)
 
         cl_gan.recon_enc(timestamp, val=False)
-
 
 
