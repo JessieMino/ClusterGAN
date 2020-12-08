@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="904e6c9d-b75b-4422-a769-b7d648e18fad" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Image_ClusterGAN.py" beforeDir="false" afterPath="$PROJECT_DIR$/Image_ClusterGAN.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Image_wgan_gp.py" beforeDir="false" afterPath="$PROJECT_DIR$/Image_wgan_gp.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mnist/clus_wgan.py" beforeDir="false" afterPath="$PROJECT_DIR$/mnist/clus_wgan.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Image_ClusterGAN.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fashion/clus_wgan.py" beforeDir="false" afterPath="$PROJECT_DIR$/fashion/clus_wgan.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -17,11 +17,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Image_ClusterGAN.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="552">
-              <caret line="82" lean-forward="true" selection-start-line="82" selection-end-line="82" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="-6224">
+              <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
             </state>
           </provider>
         </entry>
@@ -29,8 +26,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mnist/clus_wgan.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+            <state relative-caret-position="-467">
+              <caret line="36" column="69" lean-forward="true" selection-start-line="36" selection-start-column="12" selection-end-line="36" selection-end-column="69" />
+              <folding>
+                <element signature="e#0#23#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/fashion/clus_wgan.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1364">
+              <caret line="45" column="24" selection-start-line="45" selection-start-column="24" selection-end-line="45" selection-end-column="24" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -47,6 +56,8 @@
       <find>self.d_</find>
       <find>_loss_critic_d</find>
       <find>enc_net</find>
+      <find>load</find>
+      <find>recon_enc</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -58,6 +69,7 @@
         <option value="$PROJECT_DIR$/Image_wgan_gp.py" />
         <option value="$PROJECT_DIR$/mnist/clus_wgan.py" />
         <option value="$PROJECT_DIR$/Image_ClusterGAN.py" />
+        <option value="$PROJECT_DIR$/fashion/clus_wgan.py" />
       </list>
     </option>
   </component>
@@ -77,6 +89,21 @@
             <path>
               <item name="ClusterGAN" type="b2602c69:ProjectViewProjectNode" />
               <item name="ClusterGAN" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ClusterGAN" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ClusterGAN" type="462c0819:PsiDirectoryNode" />
+              <item name="fashion" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ClusterGAN" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ClusterGAN" type="462c0819:PsiDirectoryNode" />
+              <item name="mnist" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ClusterGAN" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ClusterGAN" type="462c0819:PsiDirectoryNode" />
+              <item name="pendigit" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -138,16 +165,6 @@
     </layout>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Image_wgan_gp.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="636">
-          <caret line="378" selection-start-line="378" selection-end-line="378" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mnist/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1224">
@@ -166,10 +183,33 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Image_wgan_gp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3609">
+          <caret line="378" selection-start-line="378" selection-end-line="378" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/metric.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fashion/clus_wgan.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1364">
+          <caret line="45" column="24" selection-start-line="45" selection-start-column="24" selection-end-line="45" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/mnist/clus_wgan.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+        <state relative-caret-position="-467">
+          <caret line="36" column="69" lean-forward="true" selection-start-line="36" selection-start-column="12" selection-end-line="36" selection-end-column="69" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
           </folding>
@@ -178,11 +218,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Image_ClusterGAN.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="552">
-          <caret line="82" lean-forward="true" selection-start-line="82" selection-end-line="82" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-6224">
+          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
         </state>
       </provider>
     </entry>

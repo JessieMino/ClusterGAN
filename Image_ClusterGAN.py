@@ -1,4 +1,6 @@
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+
 import time
 import dateutil.tz
 import datetime
@@ -57,7 +59,7 @@ class clusGAN(object):
 
         real_feature, real_logits = self.d_net(self.x, reuse=False)
         fake_feature, fake_logits = self.d_net(self.x_)
-        real_feature_1, real_logits_1 = self.d_net(self.x, reuse=False)
+        real_feature_1, real_logits_1 = self.d_net(self.x)
         fake_feature_1, fake_logits_1 = self.d_net(self.x_)
 
         fake_logits = tf.reshape(fake_logits, [-1])
@@ -137,7 +139,7 @@ class clusGAN(object):
                 bx = self.x_sampler.train(batch_size)
                 bz = self.z_sampler(batch_size, self.z_dim, self.sampler, self.num_classes, self.n_cat)
                 self._v_ca_r, _ = self.sess.run([self._loss_ca_r, self.d_adam],
-                                                feed_dict={self.x: bx, self.z: bz, self._k_t: self._v_k})
+                                                  feed_dict={self.x: bx, self.z: bz, self._k_t: self._v_k})
 
             """train G"""
             bz = self.z_sampler(batch_size, self.z_dim, self.sampler, self.num_classes, self.n_cat)
@@ -278,8 +280,7 @@ class clusGAN(object):
         labels_pred = km.labels_
 
         splits = 10
-        purity, ari, nmi = [], [], []
-        for i in range(splits):
+#        purity, ari, nmi = [], [], []
 
         purity = metric.compute_purity(labels_pred, labels_true)
         ari = adjusted_rand_score(labels_true, labels_pred)
